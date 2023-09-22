@@ -1,6 +1,8 @@
 using Suburb.Inputs;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UniRx;
+using Suburb.Utils;
 
 namespace Suburb.Village 
 {
@@ -8,15 +10,14 @@ namespace Suburb.Village
     {
         [SerializeField] private CharacterController characterController;
 
+        private KeyboadInputs keyboadInputs = new();
+
         private void Awake()
         {
-            new KeyboadInputs().Enable();
-        }
-
-        private void HandlePressed(InputAction.CallbackContext context)
-        {
-            Key key = context.ReadValue<Key>();
-            Debug.Log(key);
+            keyboadInputs.Enable();
+            keyboadInputs.GetKeyPressed(Key.W)
+                .Subscribe(isPressed => this.Log(isPressed ? "pressed" : "released"))
+                .AddTo(this);
         }
     }
 }

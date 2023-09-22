@@ -13,10 +13,19 @@ namespace Suburb.Inputs
         private IDisposable checkInputsDisposable;
         private Key[] keys;
         private bool[] isPressedKeys;
+
+        private readonly Dictionary<Key, Subject<bool>> keysPressed = new();
+
         public void Enable()
         {
             keys = Enum.GetNames(typeof(UniversalKey))
-                .Select(keyString => (Key)Enum.Parse(typeof(Key), keyString))
+                .Select(keyString =>
+                {
+                    Key key = (Key)Enum.Parse(typeof(Key), keyString);
+                    keysPressed.Add(
+                        key, new Subject<bool>());
+                    return key;
+                })
                 .ToArray();
 
             int maxValue = (Enum.GetValues(typeof(Key)) as int[]).Max();
@@ -26,11 +35,22 @@ namespace Suburb.Inputs
                 .Subscribe(_ =>
                 {
                     foreach (Key key in keys)
-                        isPressedKeys[(int)key] = Keyboard.current[key].isPressed;
+                    {
+                        int code = (int)key;
+                        bool isPressed = Keyboard.current[key].isPressed;
 
-                    if (isPressedKeys[(int)Key.W])
-                        Debug.Log(Key.W);
+                        if (isPressedKeys[code] != isPressed)
+                        {
+                            isPressedKeys[code] = isPressed;
+                            keysPressed[key].OnNext(isPressed);
+                        }
+                    }
                 });
+        }
+
+        public IObservable<bool> GetKeyPressed(Key key)
+        {
+            return keysPressed.TryGetValue(key, out Subject<bool> onPressed) ? onPressed : null;
         }
 
         public void Disable()
