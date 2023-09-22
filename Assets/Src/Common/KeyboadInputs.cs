@@ -53,6 +53,11 @@ namespace Suburb.Inputs
             return keysPressed.TryGetValue(key, out Subject<bool> onPressed) ? onPressed : null;
         }
 
+        public bool GetKeyPressedValue(Key key)
+        {
+            return isPressedKeys[(int)key];
+        }
+
         public void Disable()
         {
             checkInputsDisposable?.Dispose();
