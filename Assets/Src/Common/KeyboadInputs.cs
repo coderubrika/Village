@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -16,7 +15,7 @@ namespace Suburb.Inputs
 
         private readonly Dictionary<Key, Subject<bool>> keysPressed = new();
 
-        public void Enable()
+        public KeyboadInputs()
         {
             keys = Enum.GetNames(typeof(UniversalKey))
                 .Select(keyString =>
@@ -30,7 +29,10 @@ namespace Suburb.Inputs
 
             int maxValue = (Enum.GetValues(typeof(Key)) as int[]).Max();
             isPressedKeys = new bool[Mathf.Max(maxValue + 1, keys.Length)];
+        }
 
+        public void Enable()
+        {
             checkInputsDisposable = Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
