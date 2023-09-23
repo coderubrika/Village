@@ -33,6 +33,8 @@ namespace Suburb.Inputs
 
         public void Enable()
         {
+            Disable();
+
             checkInputsDisposable = Observable.EveryUpdate()
                 .Subscribe(_ =>
                 {
