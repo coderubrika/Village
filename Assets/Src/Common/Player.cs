@@ -16,7 +16,7 @@ namespace Suburb.Village
 
         private KeyboadInputs keyboadInputs = new();
         private MouseGestureProvider gestureProvider;
-        private MovementsKeyMap movementsKeyMap = new();
+        private MovementsKeyMap movementsKeyMap = MovementsKeyMap.Default;
         private Vector2 movementInput = Vector2.zero;
         private Vector2 rotationInput = Vector2.zero;
         private float rotationX;
