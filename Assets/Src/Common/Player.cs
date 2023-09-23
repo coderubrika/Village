@@ -44,6 +44,7 @@ namespace Suburb.Village
                 .AddTo(this);
 
             gestureProvider.OnPointerMove
+                .Skip(1)
                 .Subscribe(eventData => rotationInput = eventData.Delta);
         }
 
@@ -56,7 +57,7 @@ namespace Suburb.Village
             characterController.Move(movement);
 
             transform.rotation *= Quaternion.Euler(0, rotationInput.x * Time.deltaTime * rotationSpeed.x, 0);
-            rotationX += rotationInput.y * Time.deltaTime * rotationSpeed.y;
+            rotationX += -rotationInput.y * Time.deltaTime * rotationSpeed.y;
             rotationX = Mathf.Clamp(rotationX, -lockRotationX, lockRotationX);
             headTransform.localRotation = Quaternion.Euler(rotationX, 0, 0);
         }
