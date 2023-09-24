@@ -5,34 +5,32 @@ using UniRx;
 
 namespace Suburb.Inputs
 {
-    public class KeyboardMouseMovementProvider
+    public class KeyboardMouseMovementProvider : IMovementProvider
     {
         private readonly MouseGestureProvider gestureProvider;
         private readonly KeyboadInputs keyboadInputs;
+        private readonly KeyMapService keyMapService;
 
         private readonly CompositeDisposable inputBindsDisposables = new();
 
-        private MovementsKeyMap movementsKeyMap;
         private Vector2 movementInput;
         private Vector2 oldMovementInput;
         private Vector2 rotationInput;
         private Vector2 oldRotationInput;
         private IDisposable updateDisposable;
+        private IDisposable keyMapChangedDisposable;
 
         public ReactiveCommand<Vector2> OnMovementInput { get; } = new();
         public ReactiveCommand<Vector2> OnRotationInput { get; } = new();
 
         public KeyboardMouseMovementProvider(
             MouseGestureProvider gestureProvider,
-            KeyboadInputs keyboadInputs)
+            KeyboadInputs keyboadInputs,
+            KeyMapService keyMapService)
         {
             this.gestureProvider = gestureProvider;
             this.keyboadInputs = keyboadInputs;
-        }
-
-        public void Setup(MovementsKeyMap movementsKeyMap)
-        {
-            this.movementsKeyMap = movementsKeyMap;
+            this.keyMapService = keyMapService;
         }
 
         public void Enable()
@@ -44,10 +42,14 @@ namespace Suburb.Inputs
             BindInputs();
             updateDisposable = Observable.EveryUpdate()
                 .Subscribe(_ => SendInputs());
+
+            keyMapChangedDisposable = keyMapService.OnKeyBindsChanged
+                .Subscribe(_ => Enable());
         }
 
         public void Disable()
         {
+            keyMapChangedDisposable?.Dispose();
             updateDisposable?.Dispose();
             inputBindsDisposables.Clear();
         }
@@ -56,19 +58,19 @@ namespace Suburb.Inputs
         {
             inputBindsDisposables.Clear();
 
-            keyboadInputs.GetKeyPressed(movementsKeyMap.MoveForwardKey)
+            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveForward.ToString()))
                 .Subscribe(isPressed => movementInput.y = isPressed ? 1 : movementInput.y == -1 ? -1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(movementsKeyMap.MoveBackKey)
+            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveBack.ToString()))
                 .Subscribe(isPressed => movementInput.y = isPressed ? -1 : movementInput.y == 1 ? 1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(movementsKeyMap.MoveRightKey)
+            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveRight.ToString()))
                 .Subscribe(isPressed => movementInput.x = isPressed ? 1 : movementInput.x == -1 ? -1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(movementsKeyMap.MoveLeftKey)
+            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveLeft.ToString()))
                 .Subscribe(isPressed => movementInput.x = isPressed ? -1 : movementInput.x == 1 ? 1 : 0)
                 .AddTo(inputBindsDisposables);
 

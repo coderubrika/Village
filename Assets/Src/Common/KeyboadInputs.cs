@@ -54,11 +54,17 @@ namespace Suburb.Inputs
 
         public IObservable<bool> GetKeyPressed(Key key)
         {
+            if (key == Key.None)
+                return Observable.Empty<bool>();
+
             return keysPressed.TryGetValue(key, out Subject<bool> onPressed) ? onPressed : null;
         }
 
         public bool GetKeyPressedValue(Key key)
         {
+            if (key == Key.None)
+                return false;
+
             return isPressedKeys[(int)key];
         }
 
