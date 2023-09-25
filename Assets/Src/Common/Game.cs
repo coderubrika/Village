@@ -8,8 +8,8 @@ namespace Suburb.Village
     {
         [SerializeField] private FPSMovementController movementController;
 
-        private KeyboadInputs keyboadInputs = new();
-        private KeyMapService keyMapService = new();
+        private readonly KeyboardInputs keyboardInputs = new();
+        private readonly KeyMapService keyMapService = new();
         private MouseGestureProvider gestureProvider;
         private KeyboardMouseMovementProvider movementProvider;
 
@@ -22,11 +22,11 @@ namespace Suburb.Village
 
             gestureProvider = new();
 
-            movementProvider = new(gestureProvider, keyboadInputs, keyMapService);
+            movementProvider = new(gestureProvider, keyboardInputs, keyMapService);
             movementController.Setup(movementProvider);
 
             gestureProvider.Enable();
-            keyboadInputs.Enable();
+            keyboardInputs.Enable();
             movementProvider.Enable();
         }
     }

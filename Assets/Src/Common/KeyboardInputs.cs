@@ -7,15 +7,15 @@ using UnityEngine.InputSystem;
 
 namespace Suburb.Inputs
 {
-    public class KeyboadInputs
+    public class KeyboardInputs
     {
-        private IDisposable checkInputsDisposable;
-        private Key[] keys;
-        private bool[] isPressedKeys;
-
+        private readonly Key[] keys;
+        private readonly bool[] isPressedKeys;
         private readonly Dictionary<Key, Subject<bool>> keysPressed = new();
 
-        public KeyboadInputs()
+        private IDisposable checkInputsDisposable;
+
+        public KeyboardInputs()
         {
             keys = Enum.GetNames(typeof(UniversalKey))
                 .Select(keyString =>

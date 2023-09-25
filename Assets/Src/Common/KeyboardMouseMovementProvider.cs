@@ -8,7 +8,7 @@ namespace Suburb.Inputs
     public class KeyboardMouseMovementProvider : IMovementProvider
     {
         private readonly MouseGestureProvider gestureProvider;
-        private readonly KeyboadInputs keyboadInputs;
+        private readonly KeyboardInputs keyboardInputs;
         private readonly KeyMapService keyMapService;
 
         private readonly CompositeDisposable inputBindsDisposables = new();
@@ -25,11 +25,11 @@ namespace Suburb.Inputs
 
         public KeyboardMouseMovementProvider(
             MouseGestureProvider gestureProvider,
-            KeyboadInputs keyboadInputs,
+            KeyboardInputs keyboardInputs,
             KeyMapService keyMapService)
         {
             this.gestureProvider = gestureProvider;
-            this.keyboadInputs = keyboadInputs;
+            this.keyboardInputs = keyboardInputs;
             this.keyMapService = keyMapService;
         }
 
@@ -58,19 +58,19 @@ namespace Suburb.Inputs
         {
             inputBindsDisposables.Clear();
 
-            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveForward.ToString()))
+            keyboardInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveForward.ToString()))
                 .Subscribe(isPressed => movementInput.y = isPressed ? 1 : movementInput.y == -1 ? -1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveBack.ToString()))
+            keyboardInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveBack.ToString()))
                 .Subscribe(isPressed => movementInput.y = isPressed ? -1 : movementInput.y == 1 ? 1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveRight.ToString()))
+            keyboardInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveRight.ToString()))
                 .Subscribe(isPressed => movementInput.x = isPressed ? 1 : movementInput.x == -1 ? -1 : 0)
                 .AddTo(inputBindsDisposables);
 
-            keyboadInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveLeft.ToString()))
+            keyboardInputs.GetKeyPressed(keyMapService.GetKey(MovementBind.MoveLeft.ToString()))
                 .Subscribe(isPressed => movementInput.x = isPressed ? -1 : movementInput.x == 1 ? 1 : 0)
                 .AddTo(inputBindsDisposables);
 

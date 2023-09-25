@@ -12,6 +12,7 @@ namespace Suburb.Inputs
         private Vector2 startPosition;
         private Vector2 currentPosition;
         private IDisposable updateDisposable;
+        
         public ReactiveCommand<Vector2> OnStart { get; } = new();
         public ReactiveCommand OnEnd { get; } = new();
         public ReactiveCommand<(Vector2 Position, float Magnitude)> OnJoystickMove { get; } = new();

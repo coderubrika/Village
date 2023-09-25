@@ -36,7 +36,7 @@ namespace Suburb.Village
             Vector3 forward = transform.forward;
 
             Vector3 movement = forward * movementInput.y + transform.right * movementInput.x;
-            movement = movement.normalized * movementSpeed * Time.deltaTime;
+            movement = movement.normalized * (movementSpeed * Time.deltaTime);
             characterController.Move(movement);
 
             transform.rotation *= Quaternion.Euler(0, rotationInput.x * Time.deltaTime * rotationSpeed.x, 0);
